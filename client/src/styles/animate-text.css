@@ -1,0 +1,23 @@
+.animate-text {
+  animation: animate-text 1s ease-in-out 1;
+}
+
+@keyframes animate-text {
+  from {
+    transform: translateY(-50%);
+    opacity: 0%;
+  }
+
+  50% {
+    transform: translateY(10%);
+  }
+
+  70% {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 100%;
+  }
+}
