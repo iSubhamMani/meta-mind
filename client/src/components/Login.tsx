@@ -20,7 +20,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white/95 dark:bg-black/95 px-6 text-balance">
+    <div className="min-h-screen bg-white/95 dark:bg-[#0e0e0e] px-6 text-balance">
       <div className="max-w-[80rem] mx-auto">
         <div className="flex flex-col justify-center items-center h-[35rem] md:h-[40rem]">
           <h1 className="leading-[3rem my-8 text-black dark:text-white text-4xl sm:text-5xl md:text-6xl text-center animate-text">
