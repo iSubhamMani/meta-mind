@@ -3,6 +3,7 @@ const Input = () => {
     <input
       type="text"
       placeholder="Search..."
+      autoComplete="off"
       className="w-full bg-transparent focus-within:outline-none px-4"
     />
   );
