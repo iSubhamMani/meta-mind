@@ -3,21 +3,18 @@
   "version": "1.0.0",
   "description": "server for meta mind",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon --env-file=.env src/index.js"
   },
   "author": "Subham Mani",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongoose": "^8.3.3",
-    "mongoose-aggregate-paginate-v2": "^1.0.7",
-    "ts-node": "^10.9.2"
+    "mongoose-aggregate-paginate-v2": "^1.0.7"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
-    "nodemon": "^3.1.0",
-    "typescript": "^5.4.5"
+    "nodemon": "^3.1.0"
   }
 }
