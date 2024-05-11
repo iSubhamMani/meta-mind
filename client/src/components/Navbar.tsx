@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { Search } from "lucide-react";
 import Input from "./Input";
-import { LogOut, User, SunMoon } from "lucide-react";
+import { LogOut, User, SunMoon, PencilLine } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,19 +15,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useSelector } from "react-redux";
 import { defaultProfilePhoto } from "@/utils/constants";
 import RootState from "@/interfaces/RootState";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const user = useSelector((state: RootState) => state.user);
+  const navigate = useNavigate();
+
+  const navigateToNewPost = () => {
+    navigate("/new-post");
+  };
 
   return (
     <div>
       <div className="pt-6">
-        <div className="flex justify-between items-center space-x-6">
+        <div className="flex justify-between items-center">
           <div className="w-full max-w-[35rem] flex justify-center items-center bg-gray-200 rounded-full px-4 py-3">
             <Input />
             <Search />
           </div>
-          <div>
+          <div className="flex items-center">
+            <div className="mx-5 sm:mx-8">
+              <PencilLine
+                onClick={navigateToNewPost}
+                className="text-primary cursor-pointer h-6 w-6"
+              />
+            </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer dark:border-2 border-gray-300">
