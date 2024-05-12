@@ -36,7 +36,7 @@ export default function Tiptap({
     editorProps: {
       attributes: {
         class:
-          "text-lg sm:text-xl px-4 sm:px-6 py-4 border-none dark:text-secondary rounded-md border focus-within:outline-none",
+          "flex-1 text-lg sm:text-xl px-4 sm:px-6 py-4 border-none dark:text-secondary rounded-md border focus-within:outline-none",
       },
     },
     onUpdate({ editor }) {
@@ -47,7 +47,7 @@ export default function Tiptap({
   return (
     <div className="flex flex-col flex-1 gap-6">
       <Toolbar editor={editor} />
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} className="flex-1 flex" />
     </div>
   );
 }
