@@ -1,9 +1,11 @@
 import { Button } from "./ui/button";
 import { Mail } from "lucide-react";
 import "../styles/animate-text.css";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, User } from "firebase/auth";
 import { auth } from "@/utils/firebase";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { SERVER_URL } from "@/utils/constants";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,12 +13,23 @@ const Login = () => {
 
   const handleLogin = async () => {
     signInWithPopup(auth, provider)
-      .then(() => {
+      .then(async () => {
+        await addUserToDB(auth.currentUser);
         navigate("/home");
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const addUserToDB = async (user: User | null) => {
+    try {
+      await axios.post(`${SERVER_URL}/api/v1/users/add-user`, {
+        user,
+      });
+    } catch (error) {
+      console.log("LoginError: ", error);
+    }
   };
 
   return (
