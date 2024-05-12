@@ -15,9 +15,22 @@ import { z } from "zod";
 import formSchema from "@/utils/formSchema";
 import { Textarea } from "./ui/textarea";
 import Tiptap from "./Tiptap";
+import axios from "axios";
+import { SERVER_URL } from "@/utils/constants";
+import { useSelector } from "react-redux";
+import RootState from "@/interfaces/RootState";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const NewPost = () => {
   const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user);
+  const [isSubmited, setIsSubmited] = useState(false);
+
+  useEffect(() => {
+    if (!isSubmited) return;
+    navigate("/home");
+  }, [isSubmited]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -28,12 +41,47 @@ const NewPost = () => {
     },
   });
 
+  const handlePostSubmission = async (data: z.infer<typeof formSchema>) => {
+    try {
+      const loadToast = toast.loading("Submiting post...");
+      const response = await axios.post(`${SERVER_URL}/api/v1/posts/add-post`, {
+        title: data.title,
+        body: data.body,
+        user: user?.user,
+      });
+
+      if (response.data?.success) {
+        toast.dismiss(loadToast);
+        toast.success("Post submitted successfully!", {
+          style: {
+            fontWeight: "bolder",
+            color: "#fff",
+            backgroundColor: "#007E50",
+          },
+        });
+        setIsSubmited(true);
+      }
+    } catch (error) {
+      toast.error(
+        "Something went wrong! Please check your internet connection",
+        {
+          style: {
+            fontWeight: "bolder",
+            color: "#fff",
+            backgroundColor: "#FF0000",
+          },
+        }
+      );
+      console.error(error);
+    }
+  };
+
   function onSubmit(data: z.infer<typeof formSchema>) {
     // check for empty body
     const pattern = /<p>\s*<\/p>/;
     if (pattern.test(data.body)) return;
-
-    console.log(data);
+    // create post
+    handlePostSubmission(data);
   }
 
   return (
@@ -45,29 +93,31 @@ const NewPost = () => {
             className="h-6 w-6 cursor-pointer text-black dark:text-white"
           />
           <Separator className="my-4" />
-          <div className="flex-1 flex">
+          <div className="flex-1 flex flex-col">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8 flex flex-col flex-1"
               >
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Title"
-                          className="resize-none dark:text-white text-4xl sm:text-5xl md:text-6xl"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex-1">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Title"
+                            className="resize-none dark:text-white text-4xl sm:text-5xl md:text-6xl"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex-1 flex">
                   <FormField
                     control={form.control}
                     name="body"

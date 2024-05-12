@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useSelector } from "react-redux";
-import { defaultProfilePhoto } from "@/utils/constants";
+import { DEFAULT_PROFILE_PHOTO } from "@/utils/constants";
 import RootState from "@/interfaces/RootState";
 import { useNavigate } from "react-router-dom";
 
@@ -44,7 +44,7 @@ const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer dark:border-2 border-gray-300">
                   <AvatarImage src={user?.user.photoURL} />
-                  <AvatarFallback>{defaultProfilePhoto}</AvatarFallback>
+                  <AvatarFallback>{DEFAULT_PROFILE_PHOTO}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
