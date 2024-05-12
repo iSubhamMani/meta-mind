@@ -4,6 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import { Toaster } from "sonner";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const Auth = () => {
     <>
       {loading && <h1>Loading...</h1>}
       {!loading && <Outlet />}
+      <Toaster position="bottom-center" />
     </>
   );
 };
