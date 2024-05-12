@@ -73,3 +73,22 @@ ul {
 ol {
   list-style-type: decimal;
 }
+.loader {
+  width: 2rem;
+  height: 2rem;
+  border: 4px solid hsl(221.2 83.2% 53.3%);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
