@@ -108,7 +108,7 @@ const NewPost = () => {
                         <FormControl>
                           <Textarea
                             placeholder="Title"
-                            className="resize-none dark:text-white text-4xl sm:text-5xl md:text-6xl"
+                            className="resize-none text-black dark:text-white scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-6xl"
                             {...field}
                           />
                         </FormControl>
