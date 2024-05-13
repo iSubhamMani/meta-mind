@@ -5,6 +5,7 @@ const userSchema = new Schema(
     _id: {
       type: String,
       required: true,
+      unqiue: true,
     },
     displayName: {
       type: String,
@@ -13,6 +14,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
+      unqiue: true,
     },
     photoURL: {
       type: String,
