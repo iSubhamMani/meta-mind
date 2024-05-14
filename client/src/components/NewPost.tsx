@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import RootState from "@/interfaces/RootState";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Input } from "./ui/input";
 
 const NewPost = () => {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const NewPost = () => {
     mode: "onChange",
     defaultValues: {
       title: "",
+      description: "",
       body: "",
     },
   });
@@ -46,6 +48,7 @@ const NewPost = () => {
       const loadToast = toast.loading("Submiting post...");
       const response = await axios.post(`${SERVER_URL}/api/v1/posts/add-post`, {
         title: data.title,
+        description: data.description,
         body: data.body,
         user: user?.user,
       });
@@ -109,6 +112,24 @@ const NewPost = () => {
                           <Textarea
                             placeholder="Title"
                             className="resize-none text-black dark:text-white scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-6xl"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            className="px-3 my-2 text-black dark:text-white text-base font-normal tracking-tight lg:text-lg"
+                            placeholder="A short description of your story"
                             {...field}
                           />
                         </FormControl>
