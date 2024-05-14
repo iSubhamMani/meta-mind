@@ -29,9 +29,9 @@ const Navbar = () => {
     <div>
       <div className="pt-6">
         <div className="flex justify-between items-center">
-          <div className="w-full max-w-[35rem] flex justify-center items-center bg-gray-200 rounded-full px-4 py-3">
+          <div className="w-full max-w-[35rem] flex justify-center items-center bg-gray-200 dark:bg-[#1e1e1e] rounded-full px-4 py-3">
             <Input />
-            <Search />
+            <Search className="text-black dark:text-white" />
           </div>
           <div className="flex items-center">
             <div className="mx-5 sm:mx-8">
