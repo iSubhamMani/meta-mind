@@ -1,8 +1,13 @@
 import mongoose, { Schema } from "mongoose";
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const postSchema = new Schema(
   {
     title: {
+      type: String,
+      required: true,
+    },
+    description: {
       type: String,
       required: true,
     },
@@ -18,6 +23,8 @@ const postSchema = new Schema(
   },
   { timestamps: true }
 );
+
+postSchema.plugin(mongooseAggregatePaginate);
 
 const Post = mongoose.model("Post", postSchema);
 export default Post;
