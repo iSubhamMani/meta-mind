@@ -26,7 +26,7 @@ const Navbar = () => {
   };
 
   return (
-    <div>
+    <div className="sticky top-0 z-50 bg-white dark:bg-[#0e0e0e]">
       <div className="pt-6">
         <div className="flex justify-between items-center">
           <div className="w-full max-w-[35rem] flex justify-center items-center bg-gray-200 dark:bg-[#1e1e1e] rounded-full px-4 py-3">
