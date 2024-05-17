@@ -9,7 +9,7 @@ const formSchema = z.object({
   description: z
     .string()
     .min(5, { message: "Description is too short" })
-    .max(150, { message: "Description is too long" })
+    .max(400, { message: "Description is too long" })
     .trim(),
   body: z.string().min(5, { message: "Body is too short" }).trim(),
 });
