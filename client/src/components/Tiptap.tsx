@@ -36,7 +36,7 @@ export default function Tiptap({
     editorProps: {
       attributes: {
         class:
-          "font-nunito flex-1 leading-7 [&:not(:first-child)]:mt-6 text-lg sm:text-xl px-4 sm:px-6 py-4 border-none dark:text-secondary rounded-md border focus-within:outline-none",
+          "font-lato flex-1 leading-7 [&:not(:first-child)]:mt-6 text-lg sm:text-xl px-4 sm:px-6 py-4 border-none dark:text-secondary rounded-md border focus-within:outline-none",
       },
     },
     onUpdate({ editor }) {
