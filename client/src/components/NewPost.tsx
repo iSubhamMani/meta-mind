@@ -111,7 +111,7 @@ const NewPost = () => {
                         <FormControl>
                           <Textarea
                             placeholder="Title"
-                            className="resize-none text-black dark:text-white scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-6xl"
+                            className="resize-none text-black dark:text-white scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight"
                             {...field}
                           />
                         </FormControl>
@@ -128,7 +128,7 @@ const NewPost = () => {
                       <FormItem>
                         <FormControl>
                           <Input
-                            className="px-3 my-2 text-black dark:text-white text-base font-normal tracking-tight lg:text-lg"
+                            className="bg-transparent px-3 my-2 text-black dark:text-white text-base font-normal tracking-tight lg:text-lg"
                             placeholder="A short description of your story"
                             {...field}
                           />
