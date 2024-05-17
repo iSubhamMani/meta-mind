@@ -10,7 +10,7 @@ module.exports = {
   prefix: "",
   theme: {
     fontFamily: {
-      nunito: ["Nunito Sans", "sans-serif"],
+      lato: ["Lato", "sans-serif"],
       raleway: ["Raleway", "sans-serif"],
     },
     container: {
