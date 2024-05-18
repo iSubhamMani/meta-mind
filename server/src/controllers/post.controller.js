@@ -44,8 +44,22 @@ const getFeaturedPosts = asyncHandler(async (req, res) => {
 
   const pipeline = [
     {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "post",
+        as: "likes",
+      },
+    },
+    {
+      $addFields: {
+        likesCount: { $size: "$likes" },
+      },
+    },
+    {
       $sort: {
-        createdAt: -1,
+        likesCount: -1,
+        createdAt: 1, // Secondary sorting by createdAt if likesCount is the same
       },
     },
     {
@@ -68,6 +82,12 @@ const getFeaturedPosts = asyncHandler(async (req, res) => {
         author: {
           $first: "$author",
         },
+      },
+    },
+    {
+      $project: {
+        likes: 0,
+        __v: 0,
       },
     },
   ];
