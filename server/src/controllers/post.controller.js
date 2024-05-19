@@ -97,6 +97,22 @@ const getFeaturedPosts = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "Featured posts", posts));
 });
 
+const getWhatsNewPosts = asyncHandler(async (req, res) => {
+  const { user } = req.body;
+
+  if (!user) throw new ApiError(401, "Unauthorized user");
+
+  const whatsNewPosts = await Post.find()
+    .populate("author", "-__v")
+    .select("-__v")
+    .sort({ createdAt: -1 })
+    .limit(3);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Whats new posts", whatsNewPosts));
+});
+
 const getPostById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -109,4 +125,4 @@ const getPostById = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "Post found", post));
 });
 
-export { addNewPost, getFeaturedPosts, getPostById };
+export { addNewPost, getFeaturedPosts, getPostById, getWhatsNewPosts };
