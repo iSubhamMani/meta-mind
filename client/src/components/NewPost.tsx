@@ -17,19 +17,23 @@ import { Textarea } from "./ui/textarea";
 import Tiptap from "./Tiptap";
 import axios from "axios";
 import { SERVER_URL } from "@/utils/constants";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import RootState from "@/interfaces/RootState";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Input } from "./ui/input";
+import { removeWhatsNewPosts, setRefetch } from "@/redux/postSlice";
 
 const NewPost = () => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
   const [isSubmited, setIsSubmited] = useState(false);
+  const dispatcher = useDispatch();
 
   useEffect(() => {
     if (!isSubmited) return;
+    dispatcher(removeWhatsNewPosts());
+    dispatcher(setRefetch(true));
     navigate("/home");
   }, [isSubmited]);
 
@@ -111,7 +115,7 @@ const NewPost = () => {
                         <FormControl>
                           <Textarea
                             placeholder="Title"
-                            className="resize-none text-black dark:text-white scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight"
+                            className="resize-none font-raleway text-black dark:text-white scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight"
                             {...field}
                           />
                         </FormControl>
@@ -128,7 +132,7 @@ const NewPost = () => {
                       <FormItem>
                         <FormControl>
                           <Input
-                            className="bg-transparent px-3 my-2 text-black dark:text-white text-base font-normal tracking-tight lg:text-lg"
+                            className="bg-transparent px-3 my-2 text-black dark:text-white text-base font-normal tracking-tight lg:text-xl"
                             placeholder="A short description of your story"
                             {...field}
                           />
