@@ -1,3 +1,5 @@
+import Post from "./Post";
+
 interface RootState {
   user: {
     user: {
@@ -8,6 +10,11 @@ interface RootState {
       photoURL?: string;
       isAnonymous?: boolean;
     };
+  };
+  post: {
+    refetch: boolean;
+    featuredPosts: Post[];
+    whatsNewPosts: Post[];
   };
 }
 
