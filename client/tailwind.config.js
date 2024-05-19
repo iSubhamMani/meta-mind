@@ -10,7 +10,7 @@ module.exports = {
   prefix: "",
   theme: {
     fontFamily: {
-      lato: ["Lato", "sans-serif"],
+      source: ["Source Serif 4", "serif"],
       raleway: ["Raleway", "sans-serif"],
     },
     container: {
