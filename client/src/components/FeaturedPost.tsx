@@ -4,6 +4,7 @@ import { Bookmark } from "lucide-react";
 import { Separator } from "./ui/separator";
 import Post from "@/interfaces/Post";
 import { Link } from "react-router-dom";
+import convertToReadableDate from "@/utils/convertDate";
 
 const FeaturedPost = ({ post }: { post: Post }) => {
   return (
@@ -15,7 +16,7 @@ const FeaturedPost = ({ post }: { post: Post }) => {
             alt="photo"
           />
         </Avatar>
-        <span className="text-black dark:text-white text-sm font-bold line-clamp-1">
+        <span className="text-black dark:text-white text-sm font-medium line-clamp-1">
           {post?.author.displayName}
         </span>
       </div>
@@ -30,9 +31,9 @@ const FeaturedPost = ({ post }: { post: Post }) => {
         </div>
       </Link>
       <div className="mb-2 mt-8 sm:mb-4 flex justify-between items-center">
-        <span className="text-sm text-gray-800 dark:text-gray-400 line-clamp-1">
-          {post?.createdAt}
-        </span>
+        <p className="font-normal text-sm text-[#797B79] dark:text-[#e1e1e1] line-clamp-1">
+          {convertToReadableDate(post?.createdAt)}
+        </p>
         <Bookmark className="cursor-pointer w-4 h-4 sm:w-5 sm:h-5 text-black dark:text-white" />
       </div>
       <Separator className="mt-4 sm:mt-8" />
