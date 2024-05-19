@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Toaster } from "sonner";
+import PageLoad from "./PageLoad";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Auth = () => {
 
   return (
     <>
-      {loading && <h1>Loading...</h1>}
+      {loading && <PageLoad />}
       {!loading && <Outlet />}
       <Toaster position="bottom-center" />
     </>

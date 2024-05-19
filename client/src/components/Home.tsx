@@ -15,12 +15,14 @@ import {
   setRefetch,
 } from "@/redux/postSlice";
 import FeaturedPostSkeleton from "./FeaturedPostSkeleton";
+import WhatsNewPostSkeleton from "./WhatsNewPostSkeleton";
 
 const Home = () => {
   const user = useSelector((state: RootState) => state.user);
   const refetch = useSelector((state: RootState) => state.post.refetch);
 
   const [featuredLoading, setFeaturedLoading] = useState(false);
+  const [whatsNewLoading, setWhatsNewLoading] = useState(false);
 
   const { featuredPosts, whatsNewPosts } = useSelector(
     (state: RootState) => state.post
@@ -59,6 +61,7 @@ const Home = () => {
 
   const getWhatsNewPosts = async () => {
     try {
+      setWhatsNewLoading(true);
       const response = await axios.post(
         `${SERVER_URL}/api/v1/posts/whats-new`,
         {
@@ -66,9 +69,10 @@ const Home = () => {
         }
       );
 
-      if (response.data?.success)
-        dispatcher(addWhatsNewPosts(response.data?.data));
+      if (response.data?.success) setWhatsNewLoading(false);
+      dispatcher(addWhatsNewPosts(response.data?.data));
     } catch (error) {
+      setWhatsNewLoading(false);
       console.log(error);
     }
   };
@@ -110,11 +114,19 @@ const Home = () => {
                 </h3>
                 <Rss className="text-purple-600 dark:text-purple-400" />
               </div>
-              <div className="flex flex-col gap-3">
-                {whatsNewPosts.map((post: Post) => {
-                  return <NewToday post={post} key={post?._id} />;
-                })}
-              </div>
+              {whatsNewLoading ? (
+                <div className="flex flex-col gap-3">
+                  <WhatsNewPostSkeleton />
+                  <WhatsNewPostSkeleton />
+                  <WhatsNewPostSkeleton />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {whatsNewPosts.map((post: Post) => {
+                    return <NewToday post={post} key={post?._id} />;
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>
