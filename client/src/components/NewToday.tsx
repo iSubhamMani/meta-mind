@@ -23,7 +23,7 @@ const NewToday = ({ post }: { post: Post }) => {
                 {post?.author.displayName}
               </span>
             </div>
-            <p className="font-bold font-raleway mt-2 md:mt-3 line-clamp-2 md:line-clamp-3 text-black dark:text-white">
+            <p className="font-bold font-raleway mt-4 line-clamp-2 md:line-clamp-3 text-black dark:text-white">
               {post?.title}
             </p>
             <div className="mt-2 flex items-center justify-between">
