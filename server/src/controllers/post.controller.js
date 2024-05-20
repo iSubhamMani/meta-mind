@@ -92,7 +92,7 @@ const getFeaturedPosts = asyncHandler(async (req, res) => {
     },
   ];
 
-  const posts = await Post.aggregatePaginate(Post.aggregate(pipeline, options));
+  const posts = await Post.aggregatePaginate(Post.aggregate(pipeline), options);
 
   return res.status(200).json(new ApiResponse(200, "Featured posts", posts));
 });
@@ -125,4 +125,62 @@ const getPostById = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "Post found", post));
 });
 
-export { addNewPost, getFeaturedPosts, getPostById, getWhatsNewPosts };
+const getSearchResults = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 5, q } = req.query;
+
+  if (!q) throw new ApiError(400, "Search query is required");
+
+  const options = {
+    page,
+    limit,
+  };
+
+  const pipeline = [
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "author",
+        pipeline: [
+          {
+            $project: {
+              __v: 0,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind: "$author" },
+    {
+      $match: {
+        $or: [
+          { title: { $regex: q, $options: "i" } },
+          { "author.displayName": { $regex: q, $options: "i" } },
+        ],
+      },
+    },
+    {
+      $project: {
+        __v: 0,
+      },
+    },
+  ];
+
+  const searchResults = await Post.aggregatePaginate(
+    Post.aggregate(pipeline),
+    options
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Search results", searchResults));
+});
+
+export {
+  addNewPost,
+  getFeaturedPosts,
+  getPostById,
+  getWhatsNewPosts,
+  getSearchResults,
+};
