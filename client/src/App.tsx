@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import appStore from "./redux/appStore";
 import NewPost from "./components/NewPost";
 import PostDetails from "./components/PostDetails";
+import SearchPage from "./components/SearchPage";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -28,6 +29,10 @@ function App() {
         {
           path: "/post/:id",
           element: <PostDetails />,
+        },
+        {
+          path: "/search",
+          element: <SearchPage />,
         },
       ],
     },
