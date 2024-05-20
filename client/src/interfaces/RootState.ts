@@ -16,6 +16,10 @@ interface RootState {
     featuredPosts: Post[];
     whatsNewPosts: Post[];
   };
+  search: {
+    searchQuery: string;
+    cachedResults: object;
+  };
 }
 
 export default RootState;
