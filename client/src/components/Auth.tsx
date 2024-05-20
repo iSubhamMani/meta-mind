@@ -15,7 +15,14 @@ const Auth = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch(addUserToState(user));
+        dispatch(
+          addUserToState({
+            uid: user.uid,
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+          })
+        );
         setLoading(false);
         navigate("/home");
       } else {
