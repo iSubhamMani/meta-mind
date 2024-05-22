@@ -16,12 +16,14 @@ import {
 } from "@/redux/postSlice";
 import FeaturedPostSkeleton from "./FeaturedPostSkeleton";
 import WhatsNewPostSkeleton from "./WhatsNewPostSkeleton";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { setHasMore, updatePage } from "@/redux/featuredSlice";
 
 const Home = () => {
   const user = useSelector((state: RootState) => state.user);
   const refetch = useSelector((state: RootState) => state.post.refetch);
+  const { hasMore, page } = useSelector((state: RootState) => state.featured);
 
-  const [featuredLoading, setFeaturedLoading] = useState(false);
   const [whatsNewLoading, setWhatsNewLoading] = useState(false);
 
   const { featuredPosts, whatsNewPosts } = useSelector(
@@ -44,17 +46,19 @@ const Home = () => {
 
   const getFeaturedPosts = async () => {
     try {
-      setFeaturedLoading(true);
-      const response = await axios.post(`${SERVER_URL}/api/v1/posts/featured`, {
-        user: user?.user,
-      });
+      const response = await axios.post(
+        `${SERVER_URL}/api/v1/posts/featured?page=${page}`,
+        {
+          user: user?.user,
+        }
+      );
 
       if (response.data?.success) {
-        setFeaturedLoading(false);
+        dispatcher(updatePage());
+        dispatcher(setHasMore(response.data?.data?.hasNextPage));
         dispatcher(addFeaturedPosts(response.data?.data?.docs));
       }
     } catch (error) {
-      setFeaturedLoading(false);
       console.log(error);
     }
   };
@@ -89,20 +93,28 @@ const Home = () => {
               </h3>
               <TrendingUp className="text-green-600 dark:text-green-400" />
             </div>
-            {featuredLoading ? (
-              <div>
-                <FeaturedPostSkeleton />
-                <FeaturedPostSkeleton />
-                <FeaturedPostSkeleton />
-                <FeaturedPostSkeleton />
-              </div>
-            ) : (
-              <div>
-                {featuredPosts.map((post: Post) => (
-                  <FeaturedPost post={post} key={post._id} />
-                ))}
-              </div>
-            )}
+            <InfiniteScroll
+              scrollThreshold={0.9}
+              dataLength={featuredPosts.length}
+              next={getFeaturedPosts}
+              hasMore={hasMore}
+              loader={
+                <div>
+                  <FeaturedPostSkeleton />
+                  <FeaturedPostSkeleton />
+                  <FeaturedPostSkeleton />
+                </div>
+              }
+              endMessage={
+                <p className="text-center text-sm text-black dark:text-white">
+                  Looks like you have reached the end
+                </p>
+              }
+            >
+              {featuredPosts.map((post: Post) => {
+                return <FeaturedPost post={post} key={post?._id} />;
+              })}
+            </InfiniteScroll>
           </div>
           <Separator className="sm:hidden" />
           <div className="w-full sm:w-1/3 flex gap-6">
