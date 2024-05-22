@@ -19,6 +19,13 @@ interface RootState {
   search: {
     searchQuery: string;
     cachedResults: object;
+    hasMore: boolean;
+    page: number;
+    searchResults: Post[];
+  };
+  featured: {
+    hasMore: boolean;
+    page: number;
   };
 }
 
