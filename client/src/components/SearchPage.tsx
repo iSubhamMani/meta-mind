@@ -1,6 +1,5 @@
 import { ArrowLeft, Frown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { Separator } from "./ui/separator";
 import "../styles/animate-text-2.css";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -21,6 +20,7 @@ import {
 } from "@/redux/searchSlice";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SearchResultsSkeleton from "./SearchResultsSkeleton";
+import Navbar from "./Navbar";
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -110,12 +110,12 @@ const SearchPage = () => {
   return (
     <div className="min-h-screen bg-white/95 dark:bg-[#0e0e0e] px-6">
       <div className="max-w-[80rem] mx-auto">
-        <div className="py-6 sm:pb-10">
+        <Navbar />
+        <div className="pt-2 pb-4 sm:pt-4 sm:pb-6">
           <ArrowLeft
             onClick={() => navigate(-1)}
             className="h-6 w-6 cursor-pointer text-black dark:text-white"
           />
-          <Separator className="my-4" />
         </div>
         <div className="w-full max-w-[35rem] flex justify-center items-center bg-gray-200 dark:bg-[#1e1e1e] rounded-full px-4 py-3">
           <input

@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { DEFAULT_PROFILE_PHOTO } from "@/utils/constants";
 import RootState from "@/interfaces/RootState";
 import { Link, useNavigate } from "react-router-dom";
+import Logo from "./Logo";
 
 const Navbar = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -27,43 +28,46 @@ const Navbar = () => {
   return (
     <div className="sticky top-0 z-50 bg-white dark:bg-[#0e0e0e]">
       <div className="pt-6">
-        <div className="flex justify-end items-center">
-          <Link to="/search">
-            <Search className="text-black dark:text-white" />
-          </Link>
-          <div className="mx-5 sm:mx-8">
-            <PencilLine
-              onClick={navigateToNewPost}
-              className="text-primary cursor-pointer h-6 w-6"
-            />
+        <div className="flex justify-between items-center">
+          <Logo />
+          <div className="flex items-center">
+            <Link to="/search">
+              <Search className="text-black dark:text-white" />
+            </Link>
+            <div className="mx-5 sm:mx-8">
+              <PencilLine
+                onClick={navigateToNewPost}
+                className="text-primary cursor-pointer h-6 w-6"
+              />
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="cursor-pointer dark:border-2 border-gray-300">
+                  <AvatarImage src={user?.user.photoURL} />
+                  <AvatarFallback>{DEFAULT_PROFILE_PHOTO}</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <SunMoon className="mr-2 h-4 w-4" />
+                    <span>Light theme</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar className="cursor-pointer dark:border-2 border-gray-300">
-                <AvatarImage src={user?.user.photoURL} />
-                <AvatarFallback>{DEFAULT_PROFILE_PHOTO}</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <SunMoon className="mr-2 h-4 w-4" />
-                  <span>Light theme</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
       <Separator className="my-4" />
