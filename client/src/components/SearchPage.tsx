@@ -1,56 +1,107 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Frown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "./ui/separator";
 import "../styles/animate-text-2.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "@/utils/constants";
 import Post from "@/interfaces/Post";
 import SearchResultPost from "./SearchResultPost";
 import { useDispatch, useSelector } from "react-redux";
 import RootState from "@/interfaces/RootState";
-import { cacheResults, setSearchQuery } from "@/redux/searchSlice";
+import {
+  addSearchResults,
+  cacheResults,
+  clearSearchResults,
+  setHasMore,
+  setPage,
+  setSearchQuery,
+  setSearchResults,
+  updatePage,
+} from "@/redux/searchSlice";
+import InfiniteScroll from "react-infinite-scroll-component";
+import SearchResultsSkeleton from "./SearchResultsSkeleton";
 
 const SearchPage = () => {
   const navigate = useNavigate();
   const dispatcher = useDispatch();
 
-  const { searchQuery, cachedResults } = useSelector(
-    (state: RootState) => state.search
-  );
-  const [searchResults, setSearchResults] = useState<Post[]>([]);
+  const prevSearchQuery = useRef<string | null>(null);
+  const [noResults, setNoResults] = useState<boolean>(false);
+  const [initialLoad, setInitialLoad] = useState<boolean>(false);
 
-  const handleSearch = async () => {
-    // check if query exists in cache
+  const { searchQuery, hasMore, page, searchResults, cachedResults } =
+    useSelector((state: RootState) => state.search);
 
-    if (searchQuery.toLowerCase() in cachedResults) {
-      setSearchResults(
-        cachedResults[searchQuery.toLowerCase() as keyof typeof cachedResults]
-      );
+  const handleSearch = async (isInitialSearch: boolean) => {
+    setInitialLoad(isInitialSearch);
+
+    // check cache
+    if (isInitialSearch && searchQuery.trim().toLowerCase() in cachedResults) {
+      setInitialLoad(false);
+      const { data, hasMore, page } = (
+        cachedResults as Record<
+          string,
+          { data: Post[]; page: number; hasMore: boolean }
+        >
+      )[searchQuery.trim().toLowerCase()];
+
+      dispatcher(setHasMore(hasMore));
+      dispatcher(setPage(page));
+      dispatcher(setSearchResults(data));
       return;
     }
 
-    try {
-      const response = await axios.get(
-        `${SERVER_URL}/api/v1/posts/search?q=${searchQuery}`
-      );
+    if (searchQuery.trim().toLowerCase())
+      try {
+        const response = await axios.get(
+          `${SERVER_URL}/api/v1/posts/search?q=${searchQuery}&page=${page}`
+        );
 
-      if (response.data?.success) {
-        if (response.data?.data?.docs.length > 0) {
-          setSearchResults(response.data?.data?.docs);
-          dispatcher(cacheResults(response.data?.data?.docs));
+        if (response.data?.success) {
+          if (response.data?.data?.docs.length > 0) {
+            setNoResults(false);
+            setInitialLoad(false);
+            dispatcher(updatePage());
+            dispatcher(addSearchResults(response.data?.data?.docs));
+            dispatcher(
+              cacheResults({
+                posts: response.data?.data?.docs,
+                hasMore: response.data?.data?.hasNextPage,
+                page: page + 1,
+              })
+            );
+            dispatcher(setHasMore(response.data?.data?.hasNextPage));
+          } else {
+            setInitialLoad(false);
+            setNoResults(true);
+          }
         }
+      } catch (error) {
+        setInitialLoad(false);
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   useEffect(() => {
-    if (searchQuery.length === 0) return;
+    if (
+      prevSearchQuery.current !== null &&
+      prevSearchQuery.current !== searchQuery
+    ) {
+      dispatcher(setPage(1));
+      dispatcher(setHasMore(false));
+      dispatcher(clearSearchResults());
+    }
+
+    prevSearchQuery.current = searchQuery;
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (searchQuery.trim().length === 0) return;
+    setNoResults(false);
 
     const timer = setTimeout(() => {
-      handleSearch();
+      handleSearch(true);
     }, 700);
 
     return () => clearTimeout(timer);
@@ -77,10 +128,51 @@ const SearchPage = () => {
           />
         </div>
 
-        <div className="mt-10 sm:mt-12 pb-6 w-full sm:w-[85%]">
-          {searchResults.map((post: Post) => {
-            return <SearchResultPost post={post} />;
-          })}
+        <div className="mt-10 sm:mt-12 pb-6">
+          <div className="w-full">
+            {searchQuery.trim().length > 0 &&
+              searchResults.length === 0 &&
+              noResults && (
+                <div className="flex flex-col items-center gap-4">
+                  <Frown className="h-8 w-8 sm:h-12 sm:w-12 dark:text-gray-700 text-gray-400" />
+                  <h1 className="text-lg sm:text-2xl dark:text-white text-black text-center">
+                    No results found
+                  </h1>
+                </div>
+              )}
+          </div>
+          <div className="w-full sm:w-[85%]">
+            {initialLoad && (
+              <div>
+                <SearchResultsSkeleton />
+                <SearchResultsSkeleton />
+                <SearchResultsSkeleton />
+              </div>
+            )}
+            {searchQuery.trim().length > 0 && searchResults.length > 0 && (
+              <InfiniteScroll
+                dataLength={searchResults.length}
+                next={() => handleSearch(false)}
+                hasMore={hasMore}
+                loader={
+                  <div>
+                    <SearchResultsSkeleton />
+                    <SearchResultsSkeleton />
+                    <SearchResultsSkeleton />
+                  </div>
+                }
+                endMessage={
+                  <p className="text-center text-sm text-black dark:text-white">
+                    Looks like you have reached the end
+                  </p>
+                }
+              >
+                {searchResults.map((post: Post) => {
+                  return <SearchResultPost key={post._id} post={post} />;
+                })}
+              </InfiniteScroll>
+            )}
+          </div>
         </div>
       </div>
     </div>
