@@ -8,8 +8,8 @@ const postSlice = createSlice({
     refetch: false,
   },
   reducers: {
-    addFeaturedPosts: (state, action) => {
-      state.featuredPosts = action.payload;
+    addFeaturedPosts: (state, action: { payload: [] }) => {
+      state.featuredPosts.push(...action.payload);
     },
     removeFeaturedPosts: (state) => {
       state.featuredPosts = [];
