@@ -92,7 +92,7 @@ const NewPost = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white/95 dark:bg-[#0e0e0e] px-6">
+    <div className="min-h-screen bg-gradient-to-bl from-[#d0daf5] to-[#fff] dark:bg-gradient-to-bl dark:from-[#111524] dark:to-[#000000] px-6">
       <div className="max-w-[80rem] mx-auto">
         <div className="flex flex-col py-6 sm:pb-10 min-h-screen">
           <ArrowLeft
@@ -159,7 +159,10 @@ const NewPost = () => {
                     )}
                   />
                 </div>
-                <Button className="w-min self-end" type="submit">
+                <Button
+                  className="w-min self-end dark:text-white"
+                  type="submit"
+                >
                   Submit
                 </Button>
               </form>

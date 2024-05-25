@@ -26,7 +26,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="sticky top-0 z-50 bg-white dark:bg-[#0e0e0e]">
+    <div className="sticky top-0 z-50 bg-gradient-to-b from-[#d1e5ffa0] to-[#ffffffa9] dark:bg-gradient-to-b dark:from-[#111524a4] dark:to-[#000000a7] backdrop-blur-md px-6 sm:px-10 md:px-16 lg:px-20 xl:px-28">
       <div className="pt-6">
         <div className="flex justify-between items-center">
           <Logo />
@@ -47,14 +47,16 @@ const Navbar = () => {
                   <AvatarFallback>{DEFAULT_PROFILE_PHOTO}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
+              <DropdownMenuContent className="w-56 dark:bg-[#1e1e1e] dark:text-white">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
+                  <Link to="/profile">
+                    <DropdownMenuItem>
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuItem>
                     <SunMoon className="mr-2 h-4 w-4" />
                     <span>Light theme</span>

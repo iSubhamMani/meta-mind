@@ -31,7 +31,7 @@ const FeaturedPost = ({ post }: { post: Post }) => {
         </div>
       </Link>
       <div className="mb-2 mt-8 sm:mb-4 flex justify-between items-center">
-        <p className="font-normal text-sm text-[#797B79] dark:text-[#e1e1e1] line-clamp-1">
+        <p className="font-normal text-sm text-[#4d5358] dark:text-[#e1e1e1] line-clamp-1">
           {convertToReadableDate(post?.createdAt)}
         </p>
         <Bookmark className="cursor-pointer w-4 h-4 sm:w-5 sm:h-5 text-black dark:text-white" />

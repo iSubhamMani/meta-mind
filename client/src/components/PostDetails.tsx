@@ -16,6 +16,7 @@ import convertToReadableDate from "@/utils/convertDate";
 const PostDetails = () => {
   const [post, setPost] = useState<Post | null>(null);
   const [liked, setLiked] = useState<boolean>(false);
+  const [likesCount, setLikesCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const PostDetails = () => {
       );
       if (response.data?.success) {
         setPost(response.data?.data);
+        setLikesCount(response.data?.data?.likesCount);
 
         // Check if user has liked the post
         const likeResponse = await axios.post(
@@ -76,9 +78,9 @@ const PostDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white/95 dark:bg-[#0e0e0e] px-6">
-      <div className="max-w-[80rem] mx-auto">
-        <Navbar />
+    <div className="min-h-screen bg-gradient-to-bl from-[#d0daf5] to-[#fff] dark:bg-gradient-to-bl dark:from-[#111524] dark:to-[#000000]">
+      <Navbar />
+      <div className="max-w-[80rem] mx-auto  px-6">
         <ArrowLeft
           onClick={() => navigate(-1)}
           className="h-6 w-6 cursor-pointer text-black dark:text-white"
@@ -112,6 +114,9 @@ const PostDetails = () => {
             <div className="mt-6 mb-8">
               <Separator />
               <div className="py-3 px-4 flex gap-4 items-center">
+                <p className="text-lg text-black dark:text-white">
+                  {likesCount}
+                </p>
                 <ThumbsUp
                   onClick={toggleLike}
                   className={`cursor-pointer w-5 h-5 sm:w-6 sm:h-6 ${
@@ -127,7 +132,7 @@ const PostDetails = () => {
                 {post?.description}
               </p>
             </div>
-            <div className="py-8 md:py-12 leading-7 text-lg sm:text-xl dark:text-secondary">
+            <div className="py-8 md:py-12 leading-7 text-lg sm:text-xl dark:text-white">
               <RawHtmlComponent htmlContent={post?.body ?? ""} />
             </div>
           </div>

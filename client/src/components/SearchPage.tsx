@@ -1,6 +1,5 @@
 import { ArrowLeft, Frown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import "../styles/animate-text-2.css";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "@/utils/constants";
@@ -108,23 +107,23 @@ const SearchPage = () => {
   }, [searchQuery]);
 
   return (
-    <div className="min-h-screen bg-white/95 dark:bg-[#0e0e0e] px-6">
-      <div className="max-w-[80rem] mx-auto">
-        <Navbar />
+    <div className="min-h-screen bg-gradient-to-bl from-[#d0daf5] to-[#fff] dark:bg-gradient-to-bl dark:from-[#111524] dark:to-[#000000] ">
+      <Navbar />
+      <div className="max-w-[80rem] mx-auto px-6">
         <div className="pt-2 pb-4 sm:pt-4 sm:pb-6">
           <ArrowLeft
             onClick={() => navigate(-1)}
             className="h-6 w-6 cursor-pointer text-black dark:text-white"
           />
         </div>
-        <div className="w-full max-w-[35rem] flex justify-center items-center bg-gray-200 dark:bg-[#1e1e1e] rounded-full px-4 py-3">
+        <div className="w-full border border-[#b1c9ed] dark:border-[#282828] shadow-sm max-w-[35rem] flex justify-center items-center bg-[#f5f9ff] dark:bg-[#202024] rounded-full px-4 py-3">
           <input
             onChange={(e) => dispatcher(setSearchQuery(e.target.value))}
             type="text"
             value={searchQuery}
             placeholder="Type something to search..."
             autoComplete="off"
-            className="font-source w-full text-base md:text-lg text-black dark:text-white bg-transparent focus-within:outline-none px-4"
+            className="font-source w-full text-base md:text-lg placeholder:text-gray-500 dark:placeholder:text-gray-400 text-black dark:text-white bg-transparent focus-within:outline-none px-4"
           />
         </div>
 

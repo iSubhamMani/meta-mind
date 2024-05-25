@@ -27,7 +27,7 @@ const NewToday = ({ post }: { post: Post }) => {
               {post?.title}
             </p>
             <div className="mt-2 flex items-center justify-between">
-              <p className="font-normal text-xs sm:text-sm text-[#797B79] dark:text-[#e1e1e1] line-clamp-1">
+              <p className="font-normal text-xs sm:text-sm text-[#4d5358] dark:text-[#e1e1e1] line-clamp-1">
                 {convertToReadableDate(post?.createdAt)}
               </p>
               <MoveRight />

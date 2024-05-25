@@ -82,13 +82,13 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white/95 dark:bg-[#0e0e0e] px-6">
-      <div className="max-w-[80rem] mx-auto">
-        <Navbar />
+    <div className="min-h-screen bg-gradient-to-bl from-[#d0daf5] to-[#fff] dark:bg-gradient-to-bl dark:from-[#111524] dark:to-[#000000]">
+      <Navbar />
+      <div className="max-w-[80rem] mx-auto px-6">
         <div className="py-2 md:py-6 flex flex-col-reverse sm:flex-row gap-6">
           <div className="w-full sm:w-2/3 ">
-            <div className="flex items-center mb-6 md:mb-10 gap-2 z-50 bg-white/95 dark:bg-[#0e0e0e]">
-              <h3 className="border-l-4 pl-4 border-l-green-600 dark:border-b-green-400 scroll-m-20 text-green-600 dark:text-green-400 text-xl sm:text-2xl font-bold tracking-tight">
+            <div className="flex items-center mb-6 md:mb-10 gap-2 z-50 bg-transparent">
+              <h3 className="border-l-4 pl-4 border-l-green-600 dark:border-b-green-400 text-green-600 dark:text-green-400 text-xl sm:text-2xl font-bold tracking-tight">
                 Featured
               </h3>
               <TrendingUp className="text-green-600 dark:text-green-400" />
