@@ -89,10 +89,12 @@ li {
 }
 
 ul {
+  padding-left: 1em;
   list-style-type: disc;
 }
 
 ol {
+  padding-left: 1em;
   list-style-type: decimal;
 }
 
