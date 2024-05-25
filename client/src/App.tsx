@@ -7,6 +7,7 @@ import appStore from "./redux/appStore";
 import NewPost from "./components/NewPost";
 import PostDetails from "./components/PostDetails";
 import SearchPage from "./components/SearchPage";
+import ProfilePage from "./components/ProfilePage";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -33,6 +34,10 @@ function App() {
         {
           path: "/search",
           element: <SearchPage />,
+        },
+        {
+          path: "/profile",
+          element: <ProfilePage />,
         },
       ],
     },
