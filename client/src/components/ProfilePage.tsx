@@ -132,7 +132,7 @@ const ProfilePage = () => {
           >
             <TabsList className="w-max flex justify-center sm:justify-start">
               <TabsTrigger value="your-posts">Your posts</TabsTrigger>
-              <TabsTrigger value="saved-posts">Saved posts</TabsTrigger>
+              <TabsTrigger value="bookmarked">Bookmarked</TabsTrigger>
             </TabsList>
             <TabsContent value="your-posts">
               <div className="mt-8 sm:mt-12 w-full sm:w-[85%]">
@@ -163,7 +163,7 @@ const ProfilePage = () => {
                 }
               </div>
             </TabsContent>
-            <TabsContent value="saved-posts">
+            <TabsContent value="bookmarked">
               <div className="mt-8 sm:mt-12 w-full sm:w-[85%]">
                 {
                   <InfiniteScroll
