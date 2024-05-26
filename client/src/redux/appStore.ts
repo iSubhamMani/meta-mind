@@ -3,6 +3,7 @@ import userSlice from "./userSlice";
 import postSlice from "./postSlice";
 import searchSlice from "./searchSlice";
 import featuredSlice from "./featuredSlice";
+import profileSlice from "./profileSlice";
 
 const appStore = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const appStore = configureStore({
     post: postSlice,
     search: searchSlice,
     featured: featuredSlice,
+    profile: profileSlice,
   },
 });
 
