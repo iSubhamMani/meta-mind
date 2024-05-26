@@ -1,6 +1,6 @@
 import { Rss, TrendingUp } from "lucide-react";
 import Navbar from "./Navbar";
-import FeaturedPost from "./FeaturedPost";
+import PostCard from "./PostCard";
 import { Separator } from "./ui/separator";
 import NewToday from "./NewToday";
 import axios from "axios";
@@ -112,7 +112,9 @@ const Home = () => {
               }
             >
               {featuredPosts.map((post: Post) => {
-                return <FeaturedPost post={post} key={post?._id} />;
+                return (
+                  <PostCard user={user?.user} post={post} key={post?._id} />
+                );
               })}
             </InfiniteScroll>
           </div>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { SERVER_URL } from "@/utils/constants";
 import Post from "@/interfaces/Post";
-import SearchResultPost from "./SearchResultPost";
+import PostCard from "./PostCard";
 import { useDispatch, useSelector } from "react-redux";
 import RootState from "@/interfaces/RootState";
 import {
@@ -31,6 +31,8 @@ const SearchPage = () => {
 
   const { searchQuery, hasMore, page, searchResults, cachedResults } =
     useSelector((state: RootState) => state.search);
+
+  const { user } = useSelector((state: RootState) => state.user);
 
   const handleSearch = async (isInitialSearch: boolean) => {
     setInitialLoad(isInitialSearch);
@@ -167,7 +169,7 @@ const SearchPage = () => {
                 }
               >
                 {searchResults.map((post: Post) => {
-                  return <SearchResultPost key={post._id} post={post} />;
+                  return <PostCard user={user} key={post._id} post={post} />;
                 })}
               </InfiniteScroll>
             )}
