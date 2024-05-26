@@ -1,15 +1,9 @@
 import Post from "./Post";
+import User from "./User";
 
 interface RootState {
   user: {
-    user: {
-      uid: string;
-      email: string;
-      emailVerified?: boolean;
-      displayName: string;
-      photoURL?: string;
-      isAnonymous?: boolean;
-    };
+    user: User;
   };
   post: {
     refetch: boolean;
@@ -26,6 +20,15 @@ interface RootState {
   featured: {
     hasMore: boolean;
     page: number;
+  };
+  profile: {
+    userPosts: Post[];
+    bookMarkedPosts: Post[];
+    hasMoreUserPosts: boolean;
+    hasMoreBookMarkedPosts: boolean;
+    userPostsPage: number;
+    bookmarkedPostsPage: number;
+    refetch: boolean;
   };
 }
 
