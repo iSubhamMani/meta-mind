@@ -2,6 +2,7 @@ import Post from "../models/post.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import mongoose from "mongoose";
 
 const addNewPost = asyncHandler(async (req, res) => {
   const { title, description, body, user } = req.body;
@@ -118,11 +119,58 @@ const getPostById = asyncHandler(async (req, res) => {
 
   if (!id) throw new ApiError(400, "Post id is required");
 
-  const post = await Post.findById(id, { __v: 0 }).populate("author", "-__v");
+  const post = await Post.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+    },
+    {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "post",
+        as: "likes",
+      },
+    },
+    {
+      $addFields: {
+        likesCount: { $size: "$likes" },
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "author",
+        pipeline: [
+          {
+            $project: {
+              __v: 0,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        author: {
+          $first: "$author",
+        },
+      },
+    },
+    {
+      $project: {
+        likes: 0,
+        __v: 0,
+      },
+    },
+  ]);
 
   if (!post) throw new ApiError(404, "Post not found");
 
-  return res.status(200).json(new ApiResponse(200, "Post found", post));
+  return res.status(200).json(new ApiResponse(200, "Post found", post[0]));
 });
 
 const getSearchResults = asyncHandler(async (req, res) => {
