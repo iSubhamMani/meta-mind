@@ -1,10 +1,11 @@
+import Post from "@/interfaces/Post";
 import { createSlice } from "@reduxjs/toolkit";
 
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
     userPosts: [],
-    bookMarkedPosts: [],
+    bookMarkedPosts: {} as Record<string, Post>,
     hasMoreUserPosts: true,
     hasMoreBookMarkedPosts: true,
     userPostsPage: 1,
@@ -18,11 +19,15 @@ const profileSlice = createSlice({
     removeUserPosts: (state) => {
       state.userPosts = [];
     },
-    addBookMarkedPosts: (state, action) => {
-      state.bookMarkedPosts = action.payload;
+    addBookMarkedPost: (state, action) => {
+      const { post } = action.payload;
+      if (!state.bookMarkedPosts[post._id]) {
+        state.bookMarkedPosts[post._id] = post;
+      }
     },
-    removeBookMarkedPosts: (state) => {
-      state.bookMarkedPosts = [];
+    removeBookMarkedPost: (state, action) => {
+      const { post } = action.payload;
+      delete state.bookMarkedPosts[post._id];
     },
     setRefetch(state, action) {
       state.refetch = action.payload;
@@ -48,8 +53,8 @@ const profileSlice = createSlice({
 export const {
   addUserPosts,
   removeUserPosts,
-  addBookMarkedPosts,
-  removeBookMarkedPosts,
+  addBookMarkedPost,
+  removeBookMarkedPost,
   setUserPostsHasMore,
   updateUserPostsPage,
   setBookMarkedHasMore,

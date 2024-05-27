@@ -23,6 +23,10 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Input } from "./ui/input";
 import { removeWhatsNewPosts, setRefetch } from "@/redux/postSlice";
+import {
+  removeUserPosts,
+  setRefetch as setRefetchProfile,
+} from "@/redux/profileSlice";
 
 const NewPost = () => {
   const navigate = useNavigate();
@@ -34,6 +38,8 @@ const NewPost = () => {
     if (!isSubmited) return;
     dispatcher(removeWhatsNewPosts());
     dispatcher(setRefetch(true));
+    dispatcher(removeUserPosts());
+    dispatcher(setRefetchProfile(true));
     navigate("/home");
   }, [isSubmited]);
 
