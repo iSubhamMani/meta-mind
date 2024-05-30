@@ -10,7 +10,8 @@ const profileSlice = createSlice({
     hasMoreBookMarkedPosts: true,
     userPostsPage: 1,
     bookmarkedPostsPage: 1,
-    refetch: false,
+    userPostsRefetch: false,
+    bookmarkRefetch: false,
   },
   reducers: {
     addUserPosts: (state, action: { payload: [] }) => {
@@ -29,8 +30,11 @@ const profileSlice = createSlice({
       const { post } = action.payload;
       delete state.bookMarkedPosts[post._id];
     },
-    setRefetch(state, action) {
-      state.refetch = action.payload;
+    setUserPostsRefetch(state, action) {
+      state.userPostsRefetch = action.payload;
+    },
+    setBookmarkRefetch(state, action) {
+      state.bookmarkRefetch = action.payload;
     },
     setUserPostsHasMore: (state, action) => {
       state.hasMoreUserPosts = action.payload;
@@ -47,6 +51,9 @@ const profileSlice = createSlice({
     setBookMarkedPage: (state, action) => {
       state.bookmarkedPostsPage = action.payload;
     },
+    setUserPostsPage: (state, action) => {
+      state.userPostsPage = action.payload;
+    },
   },
 });
 
@@ -60,6 +67,8 @@ export const {
   setBookMarkedHasMore,
   updateBookMarkedPage,
   setBookMarkedPage,
-  setRefetch,
+  setBookmarkRefetch,
+  setUserPostsRefetch,
+  setUserPostsPage,
 } = profileSlice.actions;
 export default profileSlice.reducer;

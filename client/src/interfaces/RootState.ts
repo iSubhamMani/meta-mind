@@ -28,7 +28,8 @@ interface RootState {
     hasMoreBookMarkedPosts: boolean;
     userPostsPage: number;
     bookmarkedPostsPage: number;
-    refetch: boolean;
+    userPostsRefetch: boolean;
+    bookmarkRefetch: boolean;
   };
 }
 
