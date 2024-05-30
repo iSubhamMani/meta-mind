@@ -8,6 +8,7 @@ import NewPost from "./components/NewPost";
 import PostDetails from "./components/PostDetails";
 import SearchPage from "./components/SearchPage";
 import ProfilePage from "./components/ProfilePage";
+import { ThemeProvider } from "./components/theme-provider";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -44,11 +45,13 @@ function App() {
   ]);
 
   return (
-    <div>
-      <Provider store={appStore}>
-        <RouterProvider router={appRouter} />
-      </Provider>
-    </div>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <div>
+        <Provider store={appStore}>
+          <RouterProvider router={appRouter} />
+        </Provider>
+      </div>
+    </ThemeProvider>
   );
 }
 

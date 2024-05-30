@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { Search } from "lucide-react";
-import { LogOut, User, SunMoon, PencilLine } from "lucide-react";
+import { LogOut, User, PencilLine } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +16,7 @@ import { DEFAULT_PROFILE_PHOTO } from "@/utils/constants";
 import RootState from "@/interfaces/RootState";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
+import { ModeToggle } from "./mode-toggle";
 
 const Navbar = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -30,15 +31,18 @@ const Navbar = () => {
       <div className="pt-6">
         <div className="flex justify-between items-center">
           <Logo />
-          <div className="flex items-center">
+          <div className="flex items-center gap-6">
             <Link to="/search">
               <Search className="text-black dark:text-white" />
             </Link>
-            <div className="mx-5 sm:mx-8">
+            <div className="hidden sm:inline-block">
               <PencilLine
                 onClick={navigateToNewPost}
                 className="text-primary cursor-pointer h-6 w-6"
               />
+            </div>
+            <div>
+              <ModeToggle />
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -51,16 +55,18 @@ const Navbar = () => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
+                  <Link className="inline-block sm:hidden" to="/new-post">
+                    <DropdownMenuItem>
+                      <PencilLine className="mr-2 h-4 w-4" />
+                      <span>Write</span>
+                    </DropdownMenuItem>
+                  </Link>
                   <Link to="/profile">
                     <DropdownMenuItem>
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </DropdownMenuItem>
                   </Link>
-                  <DropdownMenuItem>
-                    <SunMoon className="mr-2 h-4 w-4" />
-                    <span>Light theme</span>
-                  </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
