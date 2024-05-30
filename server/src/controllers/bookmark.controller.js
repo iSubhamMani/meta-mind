@@ -67,4 +67,23 @@ const getBookMarkStatus = asyncHandler(async (req, res) => {
   }
 });
 
-export { toggleBookMark, getBookMarkStatus };
+const deleteBookMark = asyncHandler(async (req, res) => {
+  const { postId, userId } = req.body;
+
+  if (!postId || !userId) {
+    throw new ApiError(400, "Post ID and User ID are required");
+  }
+
+  const unMark = await BookMark.deleteOne({
+    post: postId,
+    bookMarkedBy: userId,
+  });
+
+  if (!unMark) throw new ApiError(500, "Failed to unbookmark post");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Post unbookmarked successfully"));
+});
+
+export { toggleBookMark, getBookMarkStatus, deleteBookMark };
