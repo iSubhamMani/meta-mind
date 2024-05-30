@@ -3,7 +3,6 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import Post from "../models/post.model.js";
-import { BookMark } from "../models/bookmark.model.js";
 
 const addUser = asyncHandler(async (req, res) => {
   const { user } = req.body;
@@ -57,6 +56,9 @@ const getUserPosts = asyncHandler(async (req, res) => {
       $unwind: "$author",
     },
     {
+      $sort: { createdAt: -1 },
+    },
+    {
       $project: {
         __v: 0,
         "author.__v": 0,
@@ -108,6 +110,9 @@ const getBookMarkedPosts = asyncHandler(async (req, res) => {
     },
     {
       $unwind: "$author",
+    },
+    {
+      $sort: { createdAt: -1 },
     },
     {
       $project: {
