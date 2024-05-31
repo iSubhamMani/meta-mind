@@ -8,10 +8,16 @@ import { Separator } from "./ui/separator";
 import { ArrowLeft, Bookmark, ThumbsUp } from "lucide-react";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import RawHtmlComponent from "@/utils/RawHTML";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import RootState from "@/interfaces/RootState";
 import PostDetailsSkeleton from "./PostDetailsSkeleton";
 import convertToReadableDate from "@/utils/convertDate";
+import {
+  removeBookMarkedPost,
+  setBookMarkedHasMore,
+  setBookMarkedPage,
+  setBookmarkRefetch,
+} from "@/redux/profileSlice";
 
 const PostDetails = () => {
   const [post, setPost] = useState<Post | null>(null);
@@ -21,12 +27,19 @@ const PostDetails = () => {
 
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user.user);
+  const dispatcher = useDispatch();
+  const [bookmarked, setBookmarked] = useState<boolean>(false);
 
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     fetchPostDetails();
   }, []);
+
+  useEffect(() => {
+    if (!post) return;
+    checkBookMarkStatus();
+  }, [post]);
 
   const fetchPostDetails = async () => {
     try {
@@ -71,6 +84,52 @@ const PostDetails = () => {
 
       if (response.data?.success) {
         setLiked(!liked);
+        if (liked) setLikesCount(likesCount - 1);
+        else setLikesCount(likesCount + 1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkBookMarkStatus = async () => {
+    try {
+      const response = await axios.post(
+        `${SERVER_URL}/api/v1/bookmarks/get-bookmark-status`,
+        {
+          postId: post?._id,
+          userId: user?.uid,
+        }
+      );
+
+      if (response.data?.success) {
+        setBookmarked(response.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const toggleBookmark = async () => {
+    try {
+      const response = await axios.post(
+        `${SERVER_URL}/api/v1/bookmarks/toggle-bookmark`,
+        {
+          postId: post?._id,
+          userId: user?.uid,
+        }
+      );
+
+      if (response.data?.success) {
+        setBookmarked(!bookmarked);
+        dispatcher(setBookmarkRefetch(true));
+        dispatcher(setBookMarkedHasMore(true));
+        dispatcher(setBookMarkedPage(1));
+        dispatcher(
+          removeBookMarkedPost({
+            post: post,
+          })
+        );
       }
     } catch (error) {
       console.log(error);
@@ -93,7 +152,7 @@ const PostDetails = () => {
               {post?.title}
             </h1>
             <div className="mt-6 sm:mt-8 flex items-start gap-4">
-              <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
+              <Avatar className="w-8 h-8 sm:w-10 sm:h-10 border-2 dark:border-gray-300 border-gray-700">
                 <AvatarImage
                   src={post?.author.photoURL || DEFAULT_PROFILE_PHOTO}
                   alt="photo"
@@ -114,21 +173,28 @@ const PostDetails = () => {
             <div className="mt-6 mb-8">
               <Separator />
               <div className="py-3 px-4 flex gap-4 items-center">
-                <p className="text-lg text-black dark:text-white">
-                  {likesCount}
-                </p>
-                <ThumbsUp
-                  onClick={toggleLike}
+                <div className="flex items-center gap-2">
+                  <ThumbsUp
+                    onClick={toggleLike}
+                    className={`cursor-pointer w-5 h-5 sm:w-6 sm:h-6 ${
+                      liked ? "text-primary" : "text-black dark:text-white"
+                    }`}
+                  />
+                  <p className="text-lg text-black dark:text-white">
+                    {likesCount}
+                  </p>
+                </div>
+                <Bookmark
+                  onClick={toggleBookmark}
                   className={`cursor-pointer w-5 h-5 sm:w-6 sm:h-6 ${
-                    liked ? "text-primary" : "text-black dark:text-white"
+                    bookmarked ? "text-red-500" : "text-black dark:text-white"
                   }`}
                 />
-                <Bookmark className="cursor-pointer w-5 h-5 sm:w-6 sm:h-6 text-black dark:text-white" />
               </div>
               <Separator />
             </div>
             <div>
-              <p className="text-lg text-black dark:text-gray-400">
+              <p className="text-lg text-black dark:text-gray-300">
                 {post?.description}
               </p>
             </div>
