@@ -11,16 +11,18 @@ import { useEffect, useState } from "react";
 import Post from "@/interfaces/Post";
 import InfiniteScroll from "react-infinite-scroll-component";
 import SearchResultsSkeleton from "./SearchResultsSkeleton";
-import PostCard from "./PostCard";
 import {
-  addBookMarkedPosts,
+  addBookMarkedPost,
   addUserPosts,
   setBookMarkedHasMore,
-  setRefetch,
+  setBookmarkRefetch,
   setUserPostsHasMore,
+  setUserPostsRefetch,
   updateBookMarkedPage,
   updateUserPostsPage,
 } from "@/redux/profileSlice";
+import BookMarkedPostCard from "./BookMarkedPostCard";
+import UserPostCard from "./UserPostCard";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -37,23 +39,31 @@ const ProfilePage = () => {
     bookMarkedPosts,
     bookmarkedPostsPage,
     hasMoreBookMarkedPosts,
-    refetch,
+    bookmarkRefetch,
+    userPostsRefetch,
   } = useSelector((state: RootState) => state.profile);
 
   useEffect(() => {
-    if (userPosts.length > 0 && tabIndex === 0) return;
-    if (tabIndex === 0) getUserPosts();
+    window.scrollTo(0, 0);
+    if (Object.keys(userPosts).length > 0 && tabIndex === 0) return;
+    if (tabIndex === 0 && !userPostsRefetch) getUserPosts();
   }, []);
 
   useEffect(() => {
-    if (bookMarkedPosts.length > 0 && tabIndex === 1) return;
+    if (Object.keys(bookMarkedPosts).length > 0 && tabIndex === 1) return;
     if (tabIndex === 1) getBookMarkedPosts();
   }, [tabIndex]);
 
   useEffect(() => {
-    if (!refetch) return;
+    if (!userPostsRefetch) return;
+    getUserPosts();
+    dispatcher(setUserPostsRefetch(false));
+  }, [userPosts]);
+
+  useEffect(() => {
+    if (!bookmarkRefetch) return;
     getBookMarkedPosts();
-    dispatcher(setRefetch(false));
+    dispatcher(setBookmarkRefetch(false));
   }, [bookMarkedPosts]);
 
   const getUserPosts = async () => {
@@ -68,7 +78,10 @@ const ProfilePage = () => {
       if (response.data?.success) {
         dispatcher(setUserPostsHasMore(response.data?.data?.hasNextPage));
         dispatcher(updateUserPostsPage());
-        dispatcher(addUserPosts(response.data?.data?.docs));
+
+        response.data?.data?.docs.map((post: Post) => {
+          dispatcher(addUserPosts({ post }));
+        });
       }
     } catch (error) {
       console.log(error);
@@ -87,7 +100,10 @@ const ProfilePage = () => {
       if (response.data?.success) {
         dispatcher(setBookMarkedHasMore(response.data?.data?.hasNextPage));
         dispatcher(updateBookMarkedPage());
-        dispatcher(addBookMarkedPosts(response.data?.data?.docs));
+
+        response.data?.data?.docs.map((post: Post) => {
+          dispatcher(addBookMarkedPost({ post }));
+        });
       }
     } catch (error) {
       console.log(error);
@@ -113,7 +129,7 @@ const ProfilePage = () => {
           />
         </div>
         <div className="flex flex-col items-center gap-4">
-          <Avatar className="w-12 h-12 sm:w-16 sm:h-16 dark:border-2 border-gray-300">
+          <Avatar className="w-12 h-12 sm:w-16 sm:h-16 border-2 dark:border-gray-300 border-gray-700">
             <AvatarImage
               src={user?.photoURL || DEFAULT_PROFILE_PHOTO}
               alt="photo"
@@ -130,67 +146,89 @@ const ProfilePage = () => {
               handleTabChange(value);
             }}
           >
-            <TabsList className="w-max flex justify-center sm:justify-start">
-              <TabsTrigger value="your-posts">Your posts</TabsTrigger>
-              <TabsTrigger value="bookmarked">Bookmarked</TabsTrigger>
-            </TabsList>
+            <div className="flex justify-center">
+              <TabsList className="">
+                <TabsTrigger value="your-posts">Your posts</TabsTrigger>
+                <TabsTrigger value="bookmarked">Bookmarked</TabsTrigger>
+              </TabsList>
+            </div>
             <TabsContent value="your-posts">
-              <div className="mt-8 sm:mt-12 w-full sm:w-[85%]">
-                {
-                  <InfiniteScroll
-                    dataLength={userPosts.length}
-                    next={getUserPosts}
-                    hasMore={hasMoreUserPosts}
-                    loader={
-                      <div>
-                        <SearchResultsSkeleton />
-                        <SearchResultsSkeleton />
-                        <SearchResultsSkeleton />
-                      </div>
-                    }
-                    endMessage={
-                      <p className="text-center text-sm text-black dark:text-white">
-                        Looks like you have reached the end
-                      </p>
-                    }
-                  >
-                    {userPosts.map((post: Post) => {
-                      return (
-                        <PostCard user={user} key={post._id} post={post} />
-                      );
-                    })}
-                  </InfiniteScroll>
-                }
-              </div>
+              {Object.keys(userPosts).length > 0 ? (
+                <div className="my-8 sm:my-12 w-full sm:w-[85%]">
+                  {
+                    <InfiniteScroll
+                      dataLength={Object.keys(userPosts).length}
+                      next={getUserPosts}
+                      hasMore={hasMoreUserPosts}
+                      loader={
+                        <div>
+                          <SearchResultsSkeleton />
+                          <SearchResultsSkeleton />
+                          <SearchResultsSkeleton />
+                        </div>
+                      }
+                      endMessage={
+                        <p className="text-center text-sm text-black dark:text-white">
+                          Looks like you have reached the end
+                        </p>
+                      }
+                    >
+                      {Object.entries(userPosts).map(([, post]) => {
+                        return (
+                          <UserPostCard
+                            post={post}
+                            user={user}
+                            key={post?._id}
+                          />
+                        );
+                      })}
+                    </InfiniteScroll>
+                  }
+                </div>
+              ) : (
+                <div className="mt-8 sm:mt-12">
+                  <p className="text-sm sm:text-base text-center text-black dark:text-white">
+                    You haven't posted anything yet
+                  </p>
+                </div>
+              )}
             </TabsContent>
             <TabsContent value="bookmarked">
-              <div className="mt-8 sm:mt-12 w-full sm:w-[85%]">
-                {
-                  <InfiniteScroll
-                    dataLength={bookMarkedPosts.length}
-                    next={getBookMarkedPosts}
-                    hasMore={hasMoreBookMarkedPosts}
-                    loader={
-                      <div>
-                        <SearchResultsSkeleton />
-                        <SearchResultsSkeleton />
-                        <SearchResultsSkeleton />
-                      </div>
-                    }
-                    endMessage={
-                      <p className="text-center text-sm text-black dark:text-white">
-                        Looks like you have reached the end
-                      </p>
-                    }
-                  >
-                    {bookMarkedPosts.map((post: Post) => {
-                      return (
-                        <PostCard user={user} key={post._id} post={post} />
-                      );
-                    })}
-                  </InfiniteScroll>
-                }
-              </div>
+              {Object.keys(bookMarkedPosts).length > 0 ? (
+                <div className="my-8 sm:my-12 w-full sm:w-[85%]">
+                  {
+                    <InfiniteScroll
+                      dataLength={Object.keys(bookMarkedPosts).length}
+                      next={getBookMarkedPosts}
+                      hasMore={hasMoreBookMarkedPosts}
+                      loader={
+                        <div>
+                          <SearchResultsSkeleton />
+                          <SearchResultsSkeleton />
+                          <SearchResultsSkeleton />
+                        </div>
+                      }
+                      endMessage={
+                        <p className="text-center text-sm text-black dark:text-white">
+                          Looks like you have reached the end
+                        </p>
+                      }
+                    >
+                      {Object.entries(bookMarkedPosts).map(([, post]) => {
+                        return (
+                          <BookMarkedPostCard post={post} key={post?._id} />
+                        );
+                      })}
+                    </InfiniteScroll>
+                  }
+                </div>
+              ) : (
+                <div className="mt-8 sm:mt-12">
+                  <p className="text-sm sm:text-base text-center text-black dark:text-white">
+                    No bookmarked posts
+                  </p>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>
