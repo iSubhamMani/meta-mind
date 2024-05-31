@@ -225,10 +225,29 @@ const getSearchResults = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Search results", searchResults));
 });
 
+const deletePost = asyncHandler(async (req, res) => {
+  const { postId, userId } = req.body;
+
+  if (!postId || !userId) {
+    throw new ApiError(400, "Post ID and User ID are required");
+  }
+
+  const deletedPost = await Post.deleteOne({ _id: postId, author: userId });
+
+  if (!deletedPost) {
+    throw new ApiError(500, "Failed to delete post");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Post deleted successfully"));
+});
+
 export {
   addNewPost,
   getFeaturedPosts,
   getPostById,
   getWhatsNewPosts,
   getSearchResults,
+  deletePost,
 };
