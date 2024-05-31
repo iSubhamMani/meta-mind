@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
-    userPosts: [],
+    userPosts: {} as Record<string, Post>,
     bookMarkedPosts: {} as Record<string, Post>,
     hasMoreUserPosts: true,
     hasMoreBookMarkedPosts: true,
@@ -14,11 +14,18 @@ const profileSlice = createSlice({
     bookmarkRefetch: false,
   },
   reducers: {
-    addUserPosts: (state, action: { payload: [] }) => {
-      state.userPosts.push(...action.payload);
+    addUserPosts: (state, action) => {
+      const { post } = action.payload;
+      if (!state.userPosts[post._id]) {
+        state.userPosts[post._id] = post;
+      }
     },
     removeUserPosts: (state) => {
-      state.userPosts = [];
+      state.userPosts = {};
+    },
+    removeUserPost: (state, action) => {
+      const { post } = action.payload;
+      delete state.userPosts[post._id];
     },
     addBookMarkedPost: (state, action) => {
       const { post } = action.payload;
@@ -70,5 +77,6 @@ export const {
   setBookmarkRefetch,
   setUserPostsRefetch,
   setUserPostsPage,
+  removeUserPost,
 } = profileSlice.actions;
 export default profileSlice.reducer;
