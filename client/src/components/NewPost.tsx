@@ -25,7 +25,9 @@ import { Input } from "./ui/input";
 import { removeWhatsNewPosts, setRefetch } from "@/redux/postSlice";
 import {
   removeUserPosts,
-  setRefetch as setRefetchProfile,
+  setUserPostsHasMore,
+  setUserPostsPage,
+  setUserPostsRefetch,
 } from "@/redux/profileSlice";
 
 const NewPost = () => {
@@ -39,7 +41,9 @@ const NewPost = () => {
     dispatcher(removeWhatsNewPosts());
     dispatcher(setRefetch(true));
     dispatcher(removeUserPosts());
-    dispatcher(setRefetchProfile(true));
+    dispatcher(setUserPostsRefetch(true));
+    dispatcher(setUserPostsPage(1));
+    dispatcher(setUserPostsHasMore(true));
     navigate("/home");
   }, [isSubmited]);
 

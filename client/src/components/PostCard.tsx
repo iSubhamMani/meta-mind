@@ -10,10 +10,10 @@ import User from "@/interfaces/User";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  removeBookMarkedPosts,
+  removeBookMarkedPost,
   setBookMarkedHasMore,
   setBookMarkedPage,
-  setRefetch,
+  setBookmarkRefetch,
 } from "@/redux/profileSlice";
 
 const PostCard = ({ post, user }: { post: Post; user: User }) => {
@@ -54,10 +54,14 @@ const PostCard = ({ post, user }: { post: Post; user: User }) => {
 
       if (response.data?.success) {
         setBookmarked(!bookmarked);
-        dispatcher(setRefetch(true));
+        dispatcher(setBookmarkRefetch(true));
         dispatcher(setBookMarkedHasMore(true));
         dispatcher(setBookMarkedPage(1));
-        dispatcher(removeBookMarkedPosts());
+        dispatcher(
+          removeBookMarkedPost({
+            post: post,
+          })
+        );
       }
     } catch (error) {
       console.log(error);
@@ -67,7 +71,7 @@ const PostCard = ({ post, user }: { post: Post; user: User }) => {
   return (
     <div className="pb-5 md:pb-6">
       <div className="flex items-center gap-3">
-        <Avatar className="w-6 h-6 sm:w-8 sm:h-8 dark:border-2 border-gray-300">
+        <Avatar className="w-6 h-6 sm:w-8 sm:h-8 border-2 dark:border-gray-300 border-gray-700">
           <AvatarImage
             src={post?.author.photoURL || DEFAULT_PROFILE_PHOTO}
             alt="photo"
@@ -91,12 +95,14 @@ const PostCard = ({ post, user }: { post: Post; user: User }) => {
         <p className="font-normal text-sm text-[#4d5358] dark:text-[#e1e1e1] line-clamp-1">
           {convertToReadableDate(post?.createdAt)}
         </p>
-        <Bookmark
-          onClick={toggleBookmark}
-          className={`cursor-pointer w-4 h-4 sm:w-5 sm:h-5 ${
-            bookmarked ? "text-red-500" : "text-black dark:text-white"
-          }`}
-        />
+        {user.uid !== post.author._id && (
+          <Bookmark
+            onClick={toggleBookmark}
+            className={`cursor-pointer w-4 h-4 sm:w-5 sm:h-5 ${
+              bookmarked ? "text-red-500" : "text-black dark:text-white"
+            }`}
+          />
+        )}
       </div>
       <Separator className="mt-4 sm:mt-8" />
     </div>
