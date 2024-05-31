@@ -17,6 +17,9 @@ import RootState from "@/interfaces/RootState";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { ModeToggle } from "./mode-toggle";
+import { signOut } from "firebase/auth";
+import { auth } from "@/utils/firebase";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -24,6 +27,34 @@ const Navbar = () => {
 
   const navigateToNewPost = () => {
     navigate("/new-post");
+  };
+
+  const handleLogout = async () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        toast.success("Logout successfull", {
+          style: {
+            fontWeight: "bolder",
+            color: "#fff",
+            backgroundColor: "#007E50",
+          },
+        });
+      })
+      .catch((error) => {
+        // An error happened.
+        toast.error(
+          "Something went wrong! Please check your internet connection",
+          {
+            style: {
+              fontWeight: "bolder",
+              color: "#fff",
+              backgroundColor: "#FF0000",
+            },
+          }
+        );
+        console.log(error);
+      });
   };
 
   return (
@@ -46,7 +77,7 @@ const Navbar = () => {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar className="cursor-pointer dark:border-2 border-gray-300">
+                <Avatar className="cursor-pointer border-2 dark:border-gray-300 border-gray-700">
                   <AvatarImage src={user?.user.photoURL} />
                   <AvatarFallback>{DEFAULT_PROFILE_PHOTO}</AvatarFallback>
                 </Avatar>
@@ -69,7 +100,7 @@ const Navbar = () => {
                   </Link>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>

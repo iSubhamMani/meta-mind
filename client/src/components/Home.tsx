@@ -1,4 +1,4 @@
-import { Rss, TrendingUp } from "lucide-react";
+import { PencilLine, Rss, TrendingUp } from "lucide-react";
 import Navbar from "./Navbar";
 import PostCard from "./PostCard";
 import { Separator } from "./ui/separator";
@@ -18,6 +18,7 @@ import FeaturedPostSkeleton from "./FeaturedPostSkeleton";
 import WhatsNewPostSkeleton from "./WhatsNewPostSkeleton";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { setHasMore, updatePage } from "@/redux/featuredSlice";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -84,6 +85,11 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-bl from-[#d0daf5] to-[#fff] dark:bg-gradient-to-bl dark:from-[#111524] dark:to-[#000000]">
       <Navbar />
+      <Link to="/new-post">
+        <button className="shadow-md bg-primary rounded-full p-2 fixed bottom-6 right-6 z-50 sm:hidden">
+          <PencilLine className="text-white cursor-pointer h-6 w-6" />
+        </button>
+      </Link>
       <div className="max-w-[80rem] mx-auto px-6">
         <div className="py-2 md:py-6 flex flex-col-reverse sm:flex-row gap-6">
           <div className="w-full sm:w-2/3 ">
