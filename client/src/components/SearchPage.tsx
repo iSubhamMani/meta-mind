@@ -118,7 +118,7 @@ const SearchPage = () => {
             className="h-6 w-6 cursor-pointer text-black dark:text-white"
           />
         </div>
-        <div className="w-full border border-[#b1c9ed] dark:border-[#282828] shadow-sm max-w-[35rem] flex justify-center items-center bg-[#f5f9ff] dark:bg-[#202024] rounded-full px-4 py-3">
+        <div className="w-full border border-[#b1c9ed] dark:border-[#282828] shadow-sm max-w-[35rem] flex justify-center items-center bg-[#f5f9ff] dark:bg-[#27272c] rounded-full px-4 py-3">
           <input
             onChange={(e) => dispatcher(setSearchQuery(e.target.value))}
             type="text"

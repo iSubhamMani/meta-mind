@@ -64,63 +64,67 @@ const UserPostCard = ({ post, user }: { post: Post; user: User }) => {
   };
 
   return (
-    <div className="pb-5 md:pb-6">
-      <div className="flex items-center justify-between">
-        <div className="flex gap-3 items-center">
-          <Avatar className="w-6 h-6 sm:w-8 sm:h-8 border-2 dark:border-gray-300 border-gray-700">
-            <AvatarImage
-              src={post?.author.photoURL || DEFAULT_PROFILE_PHOTO}
-              alt="photo"
-            />
-          </Avatar>
-          <span className="text-black dark:text-white text-sm font-medium line-clamp-1">
-            {post?.author.displayName}
-          </span>
+    <>
+      {user && (
+        <div className="pb-5 md:pb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex gap-3 items-center">
+              <Avatar className="w-6 h-6 sm:w-8 sm:h-8 border-2 dark:border-gray-300 border-gray-700">
+                <AvatarImage
+                  src={post?.author.photoURL ?? DEFAULT_PROFILE_PHOTO}
+                  alt="photo"
+                />
+              </Avatar>
+              <span className="text-black dark:text-white text-sm font-medium line-clamp-1">
+                {post?.author.displayName}
+              </span>
+            </div>
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <Trash className="cursor-pointer w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-black dark:text-white ">
+                    Are you sure?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="dark:text-[#e1e1e1]">
+                    Your post will be removed permanently
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="dark:bg-[#5a5a5a] dark:border-[#2a2a2a] dark:text-white dark:hover:bg-[#555555]">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className="text-white"
+                    onClick={deleteUserPost}
+                  >
+                    Yes
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+          <Link to={`/post/${post?._id}`}>
+            <div className="mt-4">
+              <h3 className="text-black dark:text-white line-clamp-2 scroll-m-20 text-lg sm:text-xl md:text-2xl font-bold tracking-tight">
+                {post?.title}
+              </h3>
+              <p className="font-normal text-gray-800 dark:text-gray-400 text-sm md:text-base mt-2 line-clamp-2">
+                {post?.description}
+              </p>
+            </div>
+          </Link>
+          <div className="mb-2 mt-8 sm:mb-4 flex justify-between items-center">
+            <p className="font-normal text-sm text-[#4d5358] dark:text-[#e1e1e1] line-clamp-1">
+              {convertToReadableDate(post?.createdAt)}
+            </p>
+          </div>
+          <Separator className="mt-4 sm:mt-8" />
         </div>
-        <AlertDialog>
-          <AlertDialogTrigger>
-            <Trash className="cursor-pointer w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-black dark:text-white ">
-                Are you sure?
-              </AlertDialogTitle>
-              <AlertDialogDescription className="dark:text-[#e1e1e1]">
-                Your post will be removed permanently
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="dark:bg-[#5a5a5a] dark:border-[#2a2a2a] dark:text-white dark:hover:bg-[#555555]">
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                className="text-white"
-                onClick={deleteUserPost}
-              >
-                Yes
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-      <Link to={`/post/${post?._id}`}>
-        <div className="mt-4">
-          <h3 className="text-black dark:text-white line-clamp-2 scroll-m-20 text-lg sm:text-xl md:text-2xl font-bold tracking-tight">
-            {post?.title}
-          </h3>
-          <p className="font-normal text-gray-800 dark:text-gray-400 text-sm md:text-base mt-2 line-clamp-2">
-            {post?.description}
-          </p>
-        </div>
-      </Link>
-      <div className="mb-2 mt-8 sm:mb-4 flex justify-between items-center">
-        <p className="font-normal text-sm text-[#4d5358] dark:text-[#e1e1e1] line-clamp-1">
-          {convertToReadableDate(post?.createdAt)}
-        </p>
-      </div>
-      <Separator className="mt-4 sm:mt-8" />
-    </div>
+      )}
+    </>
   );
 };
 

@@ -6,6 +6,7 @@ import { auth } from "@/utils/firebase";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SERVER_URL } from "@/utils/constants";
+import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,9 +16,26 @@ const Login = () => {
     signInWithPopup(auth, provider)
       .then(async () => {
         await addUserToDB(auth.currentUser);
+        toast.success("Login successfull", {
+          style: {
+            fontWeight: "bolder",
+            color: "#fff",
+            backgroundColor: "#007E50",
+          },
+        });
         navigate("/home");
       })
       .catch((error) => {
+        toast.error(
+          "Something went wrong! Please check your internet connection",
+          {
+            style: {
+              fontWeight: "bolder",
+              color: "#fff",
+              backgroundColor: "#FF0000",
+            },
+          }
+        );
         console.log(error);
       });
   };

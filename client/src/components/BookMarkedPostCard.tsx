@@ -69,7 +69,7 @@ const BookMarkedPostCard = ({ post }: { post: Post }) => {
         <div className="flex gap-3 items-center">
           <Avatar className="w-6 h-6 sm:w-8 sm:h-8 border-2 dark:border-gray-300 border-gray-700">
             <AvatarImage
-              src={post?.author.photoURL || DEFAULT_PROFILE_PHOTO}
+              src={post?.author.photoURL ?? DEFAULT_PROFILE_PHOTO}
               alt="photo"
             />
           </Avatar>

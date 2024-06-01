@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarImage } from "./ui/avatar";
 import { useSelector } from "react-redux";
 import { DEFAULT_PROFILE_PHOTO } from "@/utils/constants";
 import RootState from "@/interfaces/RootState";
@@ -78,8 +78,9 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer border-2 dark:border-gray-300 border-gray-700">
-                  <AvatarImage src={user?.user.photoURL} />
-                  <AvatarFallback>{DEFAULT_PROFILE_PHOTO}</AvatarFallback>
+                  <AvatarImage
+                    src={user?.user.photoURL ?? DEFAULT_PROFILE_PHOTO}
+                  />
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56 dark:bg-[#1e1e1e] dark:text-white">

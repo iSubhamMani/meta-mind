@@ -121,118 +121,120 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-bl from-[#d0daf5] to-[#fff] dark:bg-gradient-to-bl dark:from-[#111524] dark:to-[#000000]">
       <Navbar />
-      <div className="max-w-[80rem] mx-auto px-6">
-        <div className="pt-2 pb-4 sm:pt-4 sm:pb-6">
-          <ArrowLeft
-            onClick={() => navigate(-1)}
-            className="h-6 w-6 cursor-pointer text-black dark:text-white"
-          />
-        </div>
-        <div className="flex flex-col items-center gap-4">
-          <Avatar className="w-12 h-12 sm:w-16 sm:h-16 border-2 dark:border-gray-300 border-gray-700">
-            <AvatarImage
-              src={user?.photoURL || DEFAULT_PROFILE_PHOTO}
-              alt="photo"
+      {user && (
+        <div className="max-w-[80rem] mx-auto px-6">
+          <div className="pt-2 pb-4 sm:pt-4 sm:pb-6">
+            <ArrowLeft
+              onClick={() => navigate(-1)}
+              className="h-6 w-6 cursor-pointer text-black dark:text-white"
             />
-          </Avatar>
-          <h1 className="text-black text-base sm:text-xl dark:text-white font-bold ">
-            {user?.displayName}
-          </h1>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <Avatar className="w-12 h-12 sm:w-16 sm:h-16 border-2 dark:border-gray-300 border-gray-700">
+              <AvatarImage
+                src={user?.photoURL ?? DEFAULT_PROFILE_PHOTO}
+                alt="photo"
+              />
+            </Avatar>
+            <h1 className="text-black text-base sm:text-xl dark:text-white font-bold ">
+              {user?.displayName}
+            </h1>
+          </div>
+          <div className="flex flex-col gap-3 mt-8 sm:mt-12">
+            <Tabs
+              defaultValue="your-posts"
+              onValueChange={(value) => {
+                handleTabChange(value);
+              }}
+            >
+              <div className="flex justify-center">
+                <TabsList className="">
+                  <TabsTrigger value="your-posts">Your posts</TabsTrigger>
+                  <TabsTrigger value="bookmarked">Bookmarked</TabsTrigger>
+                </TabsList>
+              </div>
+              <TabsContent value="your-posts">
+                {Object.keys(userPosts).length > 0 ? (
+                  <div className="my-8 sm:my-12 w-full sm:w-[85%]">
+                    {
+                      <InfiniteScroll
+                        dataLength={Object.keys(userPosts).length}
+                        next={getUserPosts}
+                        hasMore={hasMoreUserPosts}
+                        loader={
+                          <div>
+                            <SearchResultsSkeleton />
+                            <SearchResultsSkeleton />
+                            <SearchResultsSkeleton />
+                          </div>
+                        }
+                        endMessage={
+                          <p className="text-center text-sm text-black dark:text-white">
+                            Looks like you have reached the end
+                          </p>
+                        }
+                      >
+                        {Object.entries(userPosts).map(([, post]) => {
+                          return (
+                            <UserPostCard
+                              post={post}
+                              user={user}
+                              key={post?._id}
+                            />
+                          );
+                        })}
+                      </InfiniteScroll>
+                    }
+                  </div>
+                ) : (
+                  <div className="mt-8 sm:mt-12">
+                    <p className="text-sm sm:text-base text-center text-black dark:text-white">
+                      You haven't posted anything yet
+                    </p>
+                  </div>
+                )}
+              </TabsContent>
+              <TabsContent value="bookmarked">
+                {Object.keys(bookMarkedPosts).length > 0 ? (
+                  <div className="my-8 sm:my-12 w-full sm:w-[85%]">
+                    {
+                      <InfiniteScroll
+                        dataLength={Object.keys(bookMarkedPosts).length}
+                        next={getBookMarkedPosts}
+                        hasMore={hasMoreBookMarkedPosts}
+                        loader={
+                          <div>
+                            <SearchResultsSkeleton />
+                            <SearchResultsSkeleton />
+                            <SearchResultsSkeleton />
+                          </div>
+                        }
+                        endMessage={
+                          <p className="text-center text-sm text-black dark:text-white">
+                            Looks like you have reached the end
+                          </p>
+                        }
+                      >
+                        {Object.entries(bookMarkedPosts).map(([, post]) => {
+                          return (
+                            <BookMarkedPostCard post={post} key={post?._id} />
+                          );
+                        })}
+                      </InfiniteScroll>
+                    }
+                  </div>
+                ) : (
+                  <div className="mt-8 sm:mt-12">
+                    <p className="text-sm sm:text-base text-center text-black dark:text-white">
+                      No bookmarked posts
+                    </p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
-        <div className="flex flex-col gap-3 mt-8 sm:mt-12">
-          <Tabs
-            defaultValue="your-posts"
-            onValueChange={(value) => {
-              handleTabChange(value);
-            }}
-          >
-            <div className="flex justify-center">
-              <TabsList className="">
-                <TabsTrigger value="your-posts">Your posts</TabsTrigger>
-                <TabsTrigger value="bookmarked">Bookmarked</TabsTrigger>
-              </TabsList>
-            </div>
-            <TabsContent value="your-posts">
-              {Object.keys(userPosts).length > 0 ? (
-                <div className="my-8 sm:my-12 w-full sm:w-[85%]">
-                  {
-                    <InfiniteScroll
-                      dataLength={Object.keys(userPosts).length}
-                      next={getUserPosts}
-                      hasMore={hasMoreUserPosts}
-                      loader={
-                        <div>
-                          <SearchResultsSkeleton />
-                          <SearchResultsSkeleton />
-                          <SearchResultsSkeleton />
-                        </div>
-                      }
-                      endMessage={
-                        <p className="text-center text-sm text-black dark:text-white">
-                          Looks like you have reached the end
-                        </p>
-                      }
-                    >
-                      {Object.entries(userPosts).map(([, post]) => {
-                        return (
-                          <UserPostCard
-                            post={post}
-                            user={user}
-                            key={post?._id}
-                          />
-                        );
-                      })}
-                    </InfiniteScroll>
-                  }
-                </div>
-              ) : (
-                <div className="mt-8 sm:mt-12">
-                  <p className="text-sm sm:text-base text-center text-black dark:text-white">
-                    You haven't posted anything yet
-                  </p>
-                </div>
-              )}
-            </TabsContent>
-            <TabsContent value="bookmarked">
-              {Object.keys(bookMarkedPosts).length > 0 ? (
-                <div className="my-8 sm:my-12 w-full sm:w-[85%]">
-                  {
-                    <InfiniteScroll
-                      dataLength={Object.keys(bookMarkedPosts).length}
-                      next={getBookMarkedPosts}
-                      hasMore={hasMoreBookMarkedPosts}
-                      loader={
-                        <div>
-                          <SearchResultsSkeleton />
-                          <SearchResultsSkeleton />
-                          <SearchResultsSkeleton />
-                        </div>
-                      }
-                      endMessage={
-                        <p className="text-center text-sm text-black dark:text-white">
-                          Looks like you have reached the end
-                        </p>
-                      }
-                    >
-                      {Object.entries(bookMarkedPosts).map(([, post]) => {
-                        return (
-                          <BookMarkedPostCard post={post} key={post?._id} />
-                        );
-                      })}
-                    </InfiniteScroll>
-                  }
-                </div>
-              ) : (
-                <div className="mt-8 sm:mt-12">
-                  <p className="text-sm sm:text-base text-center text-black dark:text-white">
-                    No bookmarked posts
-                  </p>
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

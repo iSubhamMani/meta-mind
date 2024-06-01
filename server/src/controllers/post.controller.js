@@ -209,6 +209,9 @@ const getSearchResults = asyncHandler(async (req, res) => {
       },
     },
     {
+      $sort: { createdAt: -1 },
+    },
+    {
       $project: {
         __v: 0,
       },
