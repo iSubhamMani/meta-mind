@@ -87,12 +87,6 @@ const Navbar = () => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <Link className="inline-block sm:hidden" to="/new-post">
-                    <DropdownMenuItem>
-                      <PencilLine className="mr-2 h-4 w-4" />
-                      <span>Write</span>
-                    </DropdownMenuItem>
-                  </Link>
                   <Link to="/profile">
                     <DropdownMenuItem>
                       <User className="mr-2 h-4 w-4" />
