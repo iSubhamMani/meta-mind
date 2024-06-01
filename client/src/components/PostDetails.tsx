@@ -185,12 +185,16 @@ const PostDetails = () => {
                       {likesCount}
                     </p>
                   </div>
-                  <Bookmark
-                    onClick={toggleBookmark}
-                    className={`cursor-pointer w-5 h-5 sm:w-6 sm:h-6 ${
-                      bookmarked ? "text-red-500" : "text-black dark:text-white"
-                    }`}
-                  />
+                  {user?.uid !== post?.author._id && (
+                    <Bookmark
+                      onClick={toggleBookmark}
+                      className={`cursor-pointer w-5 h-5 sm:w-6 sm:h-6 ${
+                        bookmarked
+                          ? "text-red-500"
+                          : "text-black dark:text-white"
+                      }`}
+                    />
+                  )}
                 </div>
                 <Separator />
               </div>
